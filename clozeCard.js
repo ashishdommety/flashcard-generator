@@ -1,10 +1,23 @@
-var basic = require("./basicCard.js");
-
-module.exports = function CloseCard(text,cloze){
+const cloze = function ClozeCard(text,cloze){
   this.cloze = cloze;
-  this.partial = function(){
-    var question = text.replace(cloze,"...");
-    return question;
-  };
-  this.fullText = text;
+  this.text = text;
 }
+
+cloze.prototype.partial = function () {
+  var question = this.text.replace(this.cloze,"...");
+  return question;
+};
+
+cloze.prototype.fullText = function () {
+  return this.text;
+};
+
+cloze.prototype.showCloze = function () {
+  return this.cloze;
+};
+
+
+
+
+
+module.exports = cloze;
