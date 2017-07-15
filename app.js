@@ -3,9 +3,6 @@ const clozeConstructor = require("./clozeCard.js");
 
 const inquirer = require("inquirer");
 
-// var q1 = new basic("How many cookies are in the cookie jar?", 10);
-// var clozeq1 = new cloze("There are 10 cookies in the cookie jar", "10");
-
 var basicCardArray = [];
 var clozeCardArray = [];
 
@@ -34,24 +31,53 @@ var basicCardQuestions = [{
 var moreBasicCards = [{
   type:"list",
   message:"Do you want to make another card?",
-  choices:["Yes!","Nah, I'm good"],
+  choices:["Yes!","No, let's start the quiz"],
   name:"confirm"
 }];
 
 function basicCardPrompt() {
   inquire(basicCardQuestions).then(function(flashcard){
-    const basicCard = new basicConstructor.basic(flashcard.front, flashcard.back);
+    const basicCard = new basicConstructor(flashcard.front,flashcard.back);
     basicCardArray.push(basicCard);
     inquire(moreBasicCards).then(function(cont){
       if(cont.confirm === "Yes!"){
         basicCardPrompt();
       }
       else{
-        console.log("You have created a list that has " + basicCardArray.length + " questions!" )
+        console.log("You have created a list that has " + basicCardArray.length + " questions!" );
+        basicQuiz();
       }
     })
   })
 };
+
+var count = 0;
+var correct = 0;
+var wrong = 0;
+function basicQuiz(){
+  // console.log(basicCardArray[0].front);
+  if(count < basicCardArray.length){
+    inquirer.prompt([{
+      type:"input",
+      message: basicCardArray[count].front,
+      name:"answer"
+    }]).then(function(quiz){
+      if(quiz.answer === basicCardArray[count].back){
+        console.log("Correct!!");
+        correct++;
+      } else{
+        console.log("wrong answer...");
+        wrong++;
+        console.log("the correct answer is: " + basicCardArray[count].back);
+      }
+      count++;
+      basicQuiz();
+    })
+  } else{
+    console.log(`You answered ${correct} questions correctly`);
+    console.log(`You answered ${wrong} questions incorrectly`);
+  }
+}
 
 inquire(start).then(function(answer) {
   if (answer.studyChoice === "Basic Flashcards") {
@@ -62,14 +88,5 @@ inquire(start).then(function(answer) {
   }
 })
 
-// arr.push(clozeq1.partial());
-// arr.push(clozeq1.fullText());
-// arr.push(clozeq1.showCloze());
-// console.log(arr);
 
-// TODO: Create prompts to create basic flash cards
-// TODO: create prompts to create cloze flash cards
-// TODO: create a recursive function to keep asking questions for basic cards
-//TODO: ^ do the same for cloze cards
-
-// NOTE: use arrays to hold your basic cards and their
+// TODO: Cloze Cards section
