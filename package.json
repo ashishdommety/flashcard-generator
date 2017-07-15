@@ -1,0 +1,23 @@
+{
+  "name": "flashcard-generator",
+  "version": "1.0.0",
+  "description": "A flash card generating app",
+  "main": "basicCard.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashishdommety/flashcard-generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashishdommety/flashcard-generator/issues"
+  },
+  "homepage": "https://github.com/ashishdommety/flashcard-generator#readme",
+  "dependencies": {
+    "require": "^2.4.20"
+  }
+}
