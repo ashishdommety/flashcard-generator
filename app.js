@@ -10,42 +10,79 @@ function inquire(args) {
   return inquirer.prompt(args);
 };
 
-var start = [{
+const start = [{
   type: "list",
   message: "How would you like to study?",
   choices: ["Basic Flashcards", "Cloze Flashcards"],
   name: "studyChoice"
 }];
 
-var basicCardQuestions = [{
-  type: "input",
-  message: "Type in your Question",
-  name: "front"
+const basicCardQuestions = [{
+    type: "input",
+    message: "Type in your Question",
+    name: "front"
   },
   {
-  type: "input",
-  message: "Type in the correct Answer",
-  name: "back"
-  }];
+    type: "input",
+    message: "Type in the correct Answer",
+    name: "back"
+  }
+];
 
-var moreBasicCards = [{
-  type:"list",
-  message:"Do you want to make another card?",
-  choices:["Yes!","No, let's start the quiz"],
-  name:"confirm"
+const clozeCardQuestions = [{
+    type: "input",
+    message: "Type in a sentence with the answer in it",
+    name: "question"
+  },
+  {
+    type: "input",
+    message: "Type in your cloze value",
+    name: "answer"
+  }
+];
+
+const moreCards = [{
+  type: "list",
+  message: "Do you want to make another card?",
+  choices: ["Yes!", "No, let's start the quiz"],
+  name: "confirm"
 }];
 
+inquire(start).then(function(answer) {
+  if (answer.studyChoice === "Basic Flashcards") {
+    console.log("You chose to use the basic flashcards!");
+    basicCardPrompt();
+  } else {
+    console.log("You chose to use the cloze flashcards!");
+    clozeCardPrompt();
+  }
+});
+
 function basicCardPrompt() {
-  inquire(basicCardQuestions).then(function(flashcard){
-    const basicCard = new basicConstructor(flashcard.front,flashcard.back);
+  inquire(basicCardQuestions).then(function(flashcard) {
+    const basicCard = new basicConstructor(flashcard.front, flashcard.back);
     basicCardArray.push(basicCard);
-    inquire(moreBasicCards).then(function(cont){
-      if(cont.confirm === "Yes!"){
+    inquire(moreCards).then(function(cont) {
+      if (cont.confirm === "Yes!") {
         basicCardPrompt();
-      }
-      else{
-        console.log("You have created a list that has " + basicCardArray.length + " questions!" );
+      } else {
+        console.log("You have created a list that has " + basicCardArray.length + " questions!");
         basicQuiz();
+      }
+    })
+  })
+};
+
+function clozeCardPrompt() {
+  inquire(clozeCardQuestions).then(function(flashcard) {
+    const clozeCard = new clozeConstructor(flashcard.question, flashcard.answer);
+    clozeCardArray.push(clozeCard);
+    inquire(moreCards).then(function(cont) {
+      if (cont.confirm === "Yes!") {
+        clozeCardPrompt();
+      } else {
+        console.log("You have created a list that has " + clozeCardArray.length + " questions!");
+        clozeQuiz();
       }
     })
   })
@@ -54,18 +91,42 @@ function basicCardPrompt() {
 var count = 0;
 var correct = 0;
 var wrong = 0;
-function basicQuiz(){
-  // console.log(basicCardArray[0].front);
-  if(count < basicCardArray.length){
+
+function clozeQuiz(){
+  if (count < clozeCardArray.length) {
     inquirer.prompt([{
-      type:"input",
-      message: basicCardArray[count].front,
-      name:"answer"
-    }]).then(function(quiz){
-      if(quiz.answer === basicCardArray[count].back){
+      type: "input",
+      message: clozeCardArray[count].partial(),
+      name: "answer"
+    }]).then(function(quiz) {
+      if (quiz.answer.toLowerCase() === clozeCardArray[count].cloze.toLowerCase()) {
         console.log("Correct!!");
         correct++;
-      } else{
+      } else {
+        console.log("wrong answer...");
+        wrong++;
+        console.log("the correct answer is: " + clozeCardArray[count].cloze);
+      }
+      count++;
+      clozeQuiz();
+    })
+  } else {
+    console.log(`You answered ${correct} questions correctly`);
+    console.log(`You answered ${wrong} questions incorrectly`);
+  }
+}
+
+function basicQuiz() {
+  if (count < basicCardArray.length) {
+    inquirer.prompt([{
+      type: "input",
+      message: basicCardArray[count].front,
+      name: "answer"
+    }]).then(function(quiz) {
+      if (quiz.answer.toLowerCase() === basicCardArray[count].back.toLowerCase()) {
+        console.log("Correct!!");
+        correct++;
+      } else {
         console.log("wrong answer...");
         wrong++;
         console.log("the correct answer is: " + basicCardArray[count].back);
@@ -73,20 +134,8 @@ function basicQuiz(){
       count++;
       basicQuiz();
     })
-  } else{
+  } else {
     console.log(`You answered ${correct} questions correctly`);
     console.log(`You answered ${wrong} questions incorrectly`);
   }
 }
-
-inquire(start).then(function(answer) {
-  if (answer.studyChoice === "Basic Flashcards") {
-    console.log("You chose to use the basic flashcards!");
-    basicCardPrompt();
-  } else {
-    console.log("You chose to use the cloze flashcards!");
-  }
-})
-
-
-// TODO: Cloze Cards section
