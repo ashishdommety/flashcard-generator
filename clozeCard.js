@@ -4,7 +4,7 @@ function ClozeCard(text,cloze){
 }
 
 ClozeCard.prototype.partial = function () {
-  var question = this.text.replace(this.cloze,"...");
+  var question = this.text.replace(this.cloze,"..........");
   return question;
 };
 

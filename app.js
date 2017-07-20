@@ -66,6 +66,7 @@ function basicCardPrompt() {
       if (cont.confirm === "Yes!") {
         basicCardPrompt();
       } else {
+        clear();
         console.log("You have created a list that has " + basicCardArray.length + " questions!");
         basicQuiz();
       }
@@ -81,6 +82,7 @@ function clozeCardPrompt() {
       if (cont.confirm === "Yes!") {
         clozeCardPrompt();
       } else {
+        clear();
         console.log("You have created a list that has " + clozeCardArray.length + " questions!");
         clozeQuiz();
       }
@@ -139,3 +141,11 @@ function basicQuiz() {
     console.log(`You answered ${wrong} questions incorrectly`);
   }
 }
+
+function clear(){
+  for(var i = 0; i < 15; i++){
+    console.log("\n");
+  }
+}
+
+// TODO: write questions to a text file
